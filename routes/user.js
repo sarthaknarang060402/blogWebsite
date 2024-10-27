@@ -9,7 +9,7 @@ router.get('/', commonMiddleware, (req, res) => {
 })
 
 //comment a blog
-router.post('/blog/:id/comment', commonMiddleware, async (req, res) => {
+router.post('/blogs/:id/comment', commonMiddleware, async (req, res) => {
   const blogId = req.params.id
   const comment = req.body.comment
   const author = req.username
@@ -40,7 +40,7 @@ router.post('/blog/:id/comment', commonMiddleware, async (req, res) => {
 
 //update a comment
 router.put(
-  '/blog/:id/comments/:commentId',
+  '/blogs/:id/comments/:commentId',
   commonMiddleware,
   async (req, res) => {
     const blogId = req.params.id
@@ -87,7 +87,7 @@ router.put(
 
 //delete comment
 router.delete(
-  '/blog/:id/comments/:commentId',
+  '/blogs/:id/comments/:commentId',
   commonMiddleware,
   async (req, res) => {
     const blogId = req.params.id
@@ -119,7 +119,7 @@ router.delete(
 )
 
 //rate a blog
-router.post('/blog/:id/rate', commonMiddleware, async (req, res) => {
+router.post('/blogs/:id/rate', commonMiddleware, async (req, res) => {
   const blogId = req.params.id
   const voteType = req.body.voteType
   const post = await Post.findById(blogId)
@@ -172,7 +172,7 @@ router.post('/blog/:id/rate', commonMiddleware, async (req, res) => {
 
 //rate a comment
 router.post(
-  '/blog/:id/comments/:commentId/rate',
+  '/blogs/:id/comments/:commentId/rate',
   commonMiddleware,
   async (req, res) => {
     const blogId = req.params.id

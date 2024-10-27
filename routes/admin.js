@@ -90,23 +90,18 @@ router.put(
 )
 
 //delete all blogs
-router.delete(
-  '/deleteBlogs',
-  commonMiddleware,
-  adminMiddleware,
-  async (req, res) => {
-    const areDeleted = await Post.deleteMany({})
-    if (areDeleted) {
-      res.status(200).json({ message: 'Blogs deleted successfully' })
-    } else {
-      res.status(500).send('Error deleting blogs')
-    }
+router.delete('/blogs', commonMiddleware, adminMiddleware, async (req, res) => {
+  const areDeleted = await Post.deleteMany({})
+  if (areDeleted) {
+    res.status(200).json({ message: 'Blogs deleted successfully' })
+  } else {
+    res.status(500).send('Error deleting blogs')
   }
-)
+})
 
 //delete one blog
 router.delete(
-  '/deleteBlog/:id',
+  '/blogs/:id',
   commonMiddleware,
   adminMiddleware,
   async (req, res) => {

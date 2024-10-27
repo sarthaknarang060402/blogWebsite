@@ -114,7 +114,7 @@ router.get('/blogs', commonMiddleware, async (req, res) => {
 })
 
 //get comments on a blog
-router.get('/blog/:id/comments', commonMiddleware, async (req, res) => {
+router.get('/blogs/:id/comments', commonMiddleware, async (req, res) => {
   const post = await Post.findById(req.params.id)
   if (!post) {
     return res.status(404).json({ message: 'Post not found' })
@@ -130,7 +130,7 @@ router.get('/blog/:id/comments', commonMiddleware, async (req, res) => {
 })
 
 //get a single blog
-router.get('/blog/:id', commonMiddleware, async (req, res) => {
+router.get('/blogs/:id', commonMiddleware, async (req, res) => {
   const post = await Post.findById(req.params.id)
   if (!post) {
     return res.status(404).json({ message: 'Post not found' })
