@@ -31,14 +31,29 @@ const postSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
+  votes: [
+    {
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      voteType: { type: String },
+    },
+  ],
   created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: null },
+  author: { type: String, required: true },
 })
 
 const commentSchema = new mongoose.Schema({
   post_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
   username: String,
   content: String,
+  likes: { type: Number, default: 0 },
+  dislikes: { type: Number, default: 0 },
+  votes: [
+    {
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      voteType: { type: String },
+    },
+  ],
   created_at: { type: Date, default: Date.now },
 })
 

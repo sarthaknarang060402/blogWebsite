@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const bcrypt = require('bcrypt')
-const { User } = require('../db/index.js')
+const { Post, Comment, User } = require('../db/index.js')
 const jwt = require('jsonwebtoken')
 const commonMiddleware = require('../middleware/common')
 const jwtSecret = process.env.JWT_SECRET
@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
   res.send('Hello from the Common Home page!')
 })
 
+//register
 router.post('/register', async (req, res) => {
   const username = req.body.username
   const password = req.body.password
@@ -58,7 +59,7 @@ router.post('/register', async (req, res) => {
 
   if (newUser) {
     const token = jwt.sign(
-      { username: newUser.username, access: user.isAdmin },
+      { username: newUser.username, access: user.isAdmin, userId: newUser._id },
       jwtSecret
     )
     if (isAdmin) {
@@ -75,6 +76,7 @@ router.post('/register', async (req, res) => {
   }
 })
 
+//login
 router.post('/login', async (req, res) => {
   const input = req.body.input // username or email
   const password = req.body.password
@@ -99,20 +101,41 @@ router.post('/login', async (req, res) => {
   }
 
   const token = jwt.sign(
-    { username: user.username, access: user.isAdmin },
+    { username: user.username, access: user.isAdmin, userId: user._id },
     jwtSecret
   )
   return res.status(200).json({ message: 'Logged in successfully', token })
 })
 
+//get all blogs
 router.get('/blogs', commonMiddleware, async (req, res) => {
-  const posts = await Post.findAll()
-  res.json(posts)
+  const posts = await Post.find({})
+  return res.json(posts)
 })
 
+//get comments on a blog
+router.get('/blog/:id/comments', commonMiddleware, async (req, res) => {
+  const post = await Post.findById(req.params.id)
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' })
+  }
+  const commentsArray = post.comments
+  const comments = await Comment.find({ _id: { $in: commentsArray } })
+
+  if (!comments.length) {
+    return res.json({ message: 'Comments not found' })
+  } else {
+    return res.json(comments)
+  }
+})
+
+//get a single blog
 router.get('/blog/:id', commonMiddleware, async (req, res) => {
   const post = await Post.findById(req.params.id)
-  res.json(post)
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' })
+  }
+  return res.json(post)
 })
 
 module.exports = router
